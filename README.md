@@ -89,8 +89,8 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ✅ ~~🔎 Local anime & tag search bar~~ \
 ✅ ~~📊 Basic stats~~ \
 ⬜ 🔔 Notifications for airing anime \
-✅ 🌙 Dark / Light mode toggle \
-⬜ 🌙 Animated dark mode: smooth transitions across all elements \
+✅ ~~🌙 Dark / Light mode toggle~~ \
+✅ ~~🌙 Animated dark mode: smooth transitions across all elements~~ \
 ✅ ~~📱 Improved mobile responsive design~~ \
 ⬜ ☁️ Optional cloud backup sync \
 ⬜ 🎯 Personalized recommendations based on genres and ratings \
