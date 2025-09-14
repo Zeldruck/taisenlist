@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { motion } from 'framer-motion';
 import { Squares2X2Icon, Bars3Icon, ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import AnimeCard from '../components/AnimeCard';
 import AnimeListItem from '../components/AnimeListItem';
 import AnimeDetailsModal from '../components/AnimeDetailsModal';
+
+import "./Home.css";
 
 export default function Home() {
   const [animes, setAnimes] = useState([]);
@@ -203,32 +206,65 @@ export default function Home() {
         </div>
 
         {suggestions.length > 0 && (
-          <ul className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto ${dropdownBg} border ${baseBorder} transition-colors duration-500`}>
-            {suggestions.map(anime => (
-              <li
-                key={anime.mal_id}
-                className={`flex items-center gap-2 p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer transition-colors duration-500`}
-                onClick={() => addAnimeFromAPI(anime)}
-              >
-                {/* Cover image */}
-                <img
-                  src={anime.images?.jpg?.image_url}
-                  alt={anime.title}
-                  className="w-12 h-16 object-cover rounded flex-shrink-0"
-                />
+          <ul
+            className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto overflow-x-hidden ${dropdownBg} border ${baseBorder} transition-colors duration-500
+                        scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
+          >
+            {suggestions.map(anime => {
+              const itemVariants = {
+                rest: { backgroundColor: isDark ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0)', boxShadow: '0px 0px 0px rgba(0,0,0,0)' },
+                hover: {
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                  boxShadow: isDark ? '0 0 10px rgba(255,255,255,0.3)' : '0 0 10px rgba(0,0,0,0.2)',
+                  transition: { type: 'spring', stiffness: 300, damping: 25 }
+                }
+              };
 
-                {/* Titles */}
-                <div className="flex flex-col overflow-hidden">
-                  <div className="font-medium truncate">{anime.title}</div>
-                  {anime.title_english && anime.title_english !== anime.title && (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">{anime.title_english}</div>
-                  )}
-                </div>
-              </li>
-            ))}
+              const imgVariants = {
+                rest: { scale: 1 },
+                hover: { scale: 1.1 }
+              };
+
+              const textVariants = {
+                rest: { opacity: 0.8, x: -5 },
+                hover: { opacity: 1, x: 0 }
+              };
+
+              return (
+                <motion.li
+                  key={anime.mal_id}
+                  className="flex items-center gap-2 p-2 rounded cursor-pointer overflow-hidden"
+                  variants={itemVariants}
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                  onClick={() => addAnimeFromAPI(anime)}
+                >
+                  <motion.img
+                    src={anime.images?.jpg?.image_url}
+                    alt={anime.title}
+                    className="w-12 h-16 object-cover rounded flex-shrink-0"
+                    variants={imgVariants}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  />
+
+                  <motion.div
+                    className="flex flex-col overflow-hidden"
+                    variants={textVariants}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  >
+                    <div className="font-medium truncate">{anime.title}</div>
+                    {anime.title_english && anime.title_english !== anime.title && (
+                      <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        {anime.title_english}
+                      </div>
+                    )}
+                  </motion.div>
+                </motion.li>
+              );
+            })}
           </ul>
         )}
-
 
         <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
           <input
