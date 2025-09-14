@@ -123,11 +123,43 @@ export default function Home() {
 
   let displayedAnimes = [...animes];
   if (searchLocal) {
-    const queryLower = searchLocal.toLowerCase();
-    displayedAnimes = displayedAnimes.filter(a =>
-      a.title.toLowerCase().includes(queryLower) ||
-      (a.tags && a.tags.some(tag => tag.toLowerCase().includes(queryLower)))
-    );
+    const queryLower = searchLocal.toLowerCase().trim();
+    const tokens = queryLower.split(/\s+/);
+
+    displayedAnimes = displayedAnimes.filter(a => {
+      const title = a.title.toLowerCase();
+      const tags = (a.tags || []).map(t => t.toLowerCase());
+
+      return tokens.every(token => {
+        if (token.includes("|")) {
+          const orParts = token.split("|").map(t => t.trim());
+
+          return orParts.some(part => {
+            if (part.startsWith("-")) {
+              const term = part.slice(1);
+              return !(title.includes(term) || tags.some(tag => tag.includes(term)));
+            }
+            if (part.startsWith("+")) {
+              const term = part.slice(1);
+              return title.includes(term) || tags.some(tag => tag.includes(term));
+            }
+            const term = part;
+            return title.includes(term) || tags.some(tag => tag.includes(term));
+          });
+        }
+
+        if (token.startsWith("-")) {
+          const term = token.slice(1);
+          return !(title.includes(term) || tags.some(tag => tag.includes(term)));
+        }
+        if (token.startsWith("+")) {
+          const term = token.slice(1);
+          return title.includes(term) || tags.some(tag => tag.includes(term));
+        }
+        const term = token;
+        return title.includes(term) || tags.some(tag => tag.includes(term));
+      });
+    });
   }
 
   if (filter !== 'all') {

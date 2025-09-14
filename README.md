@@ -97,10 +97,9 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ⬜ 🏷️ Drag & Drop to reorder your anime list \
 ⬜ ⭐ Favorites / Starred: mark certain anime as “important” \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
-⬜ 🔍 Combined filtering: e.g., “action + fantasy + not watched” \
+✅ ~~🔍 Combined filtering: e.g., “action + fantasy + not watched”~~ \
 ⬜ 🏷️ Tag management: add/remove tags directly in the app \
 ⬜ 📺 Season & episode support: track progress by episode or season \
-⬜ 🎯 Personalized recommendations by genres and ratings \
 ⬜ 🏢 Show studios or authors for additional info \
 ⬜ 🌐 Share public list: generate a link for others to view your collection \
 ⬜ 📈 Global progress: % of series completed vs in progress \
