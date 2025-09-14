@@ -98,7 +98,7 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ✅ ~~⭐ Favorites / Starred: mark certain anime as “important”~~ \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
 ✅ ~~🔍 Combined filtering: e.g., “action + fantasy + not watched”~~ \
-⬜ 🏷️ Tag management: add/remove tags directly in the app \
+✅ ~~🏷️ Tag management: add/remove tags directly in the app~~ \
 ⬜ 📺 Season & episode support: track progress by episode or season \
 ⬜ 🏢 Show studios or authors for additional info \
 ⬜ 🌐 Share public list: generate a link for others to view your collection \
