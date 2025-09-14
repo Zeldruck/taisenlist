@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Squares2X2Icon, Bars3Icon, ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import AnimeCard from '../components/AnimeCard';
 import AnimeListItem from '../components/AnimeListItem';
 import AnimeDetailsModal from '../components/AnimeDetailsModal';
@@ -148,12 +149,6 @@ export default function Home() {
             placeholder="Add an anime (API Jikan)" 
             className="flex-grow border p-2 rounded" 
           />
-          <button 
-            onClick={() => query && addAnimeFromAPI({ mal_id: Date.now(), title: query })}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            Add
-          </button>
         </div>
 
         {suggestions.length > 0 && (
@@ -170,35 +165,70 @@ export default function Home() {
           </ul>
         )}
 
-        <div className="flex gap-2 items-center mt-6">
+        <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
+          {/* Search input */}
           <input
             value={searchLocal}
             onChange={e => setSearchLocal(e.target.value)}
             placeholder="🔍 Search locally or by tag name"
-            className="flex-grow border p-2 rounded"
+            className="w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base"
           />
-          <select value={filter} onChange={e => setFilter(e.target.value)} className="border rounded p-2">
+
+          {/* Filter select */}
+          <select
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            className="w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base"
+          >
             <option value="all">All</option>
             <option value="watched">Watched</option>
             <option value="unwatched">To watch</option>
             <option value="top">⭐ Top</option>
           </select>
-          <select value={sort} onChange={e => setSort(e.target.value)} className="border rounded p-2">
+
+          {/* Sort select */}
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value)}
+            className="w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base"
+          >
             <option value="none">-- Sorting --</option>
             <option value="title">Title</option>
             <option value="rating">Stars</option>
             <option value="year">Year</option>
           </select>
-          <div className="ml-auto flex gap-2">
-            <button onClick={() => setView('grid')} className={`px-3 py-1 rounded ${view==='grid' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Gallery</button>
-            <button onClick={() => setView('list')} className={`px-3 py-1 rounded ${view==='list' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>List</button>
-            <button onClick={exportJSON} className="px-3 py-1 rounded bg-green-500 text-white">Export</button>
-            <label className="px-3 py-1 rounded bg-yellow-500 text-white cursor-pointer">
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto">
+            <button
+              onClick={() => setView('grid')}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            >
+              <Squares2X2Icon className="w-5 h-5" />
+              Gallery
+            </button>
+            <button
+              onClick={() => setView('list')}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            >
+              <Bars3Icon className="w-5 h-5" />
+              List
+            </button>
+            <button
+              onClick={exportJSON}
+              className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white"
+            >
+              <ArrowUpTrayIcon className="w-5 h-5" />
+              Export
+            </button>
+            <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer">
+              <ArrowDownTrayIcon className="w-5 h-5" />
               Import
               <input type="file" accept=".json" onChange={importJSON} className="hidden" />
             </label>
           </div>
         </div>
+
       </div>
 
       <div className={view === 'grid' ? 'grid grid-cols-3 gap-4' : 'flex flex-col gap-3'}>
