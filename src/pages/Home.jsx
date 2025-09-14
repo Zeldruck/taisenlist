@@ -13,11 +13,22 @@ export default function Home() {
   const [searchLocal, setSearchLocal] = useState('');
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('none');
+  const [isDark, setIsDark] = useState(false);
   const debounceRef = useRef(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('animes');
+
     if (stored) setAnimes(JSON.parse(stored));
+    
+    setIsDark(document.documentElement.classList.contains('dark'));
+
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
   }, []);
 
   const handleUpdateAnime = (id, patch) => {
@@ -37,7 +48,6 @@ export default function Home() {
     setAnimes(updated);
     localStorage.setItem('animes', JSON.stringify(updated));
   };
-
 
   const handleOpenDetails = (anime) => setSelectedAnime(anime);
   const handleCloseDetails = () => setSelectedAnime(null);
@@ -104,8 +114,7 @@ export default function Home() {
     const value = e.target.value;
     setQuery(value);
 
-    if (debounceRef.current) 
-      clearTimeout(debounceRef.current);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
       fetchSuggestions(value);
@@ -139,24 +148,30 @@ export default function Home() {
     });
   }
 
+  const baseBg = isDark ? 'bg-gray-900' : 'bg-gray-50';
+  const baseBorder = isDark ? 'border-gray-700' : 'border-gray-300';
+  const baseText = isDark ? 'text-gray-100' : 'text-gray-900';
+  const inputBg = isDark ? 'bg-gray-800 text-gray-100 placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500';
+  const dropdownBg = isDark ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900';
+
   return (
-    <div className="p-4">
-      <div className="bg-white p-4 rounded shadow mb-6 relative">
+    <div className={`p-4 ${baseBg} ${baseText} min-h-screen`}>
+      <div className={`p-4 rounded shadow mb-6 relative border ${baseBorder}`}>
         <div className="flex gap-2 mb-3">
           <input 
             value={query} 
             onChange={handleQueryChange} 
             placeholder="Add an anime (API Jikan)" 
-            className="flex-grow border p-2 rounded" 
+            className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder}`} 
           />
         </div>
 
         {suggestions.length > 0 && (
-          <ul className="absolute bg-white border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto">
+          <ul className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto ${dropdownBg} border ${baseBorder}`}>
             {suggestions.map(anime => (
               <li
                 key={anime.mal_id}
-                className="p-2 hover:bg-gray-200 cursor-pointer"
+                className={`p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer`}
                 onClick={() => addAnimeFromAPI(anime)}
               >
                 {anime.title}
@@ -170,13 +185,13 @@ export default function Home() {
             value={searchLocal}
             onChange={e => setSearchLocal(e.target.value)}
             placeholder="🔍 Search locally or by tag name"
-            className="w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base"
+            className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder}`}
           />
 
           <select
             value={filter}
             onChange={e => setFilter(e.target.value)}
-            className="w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base"
+            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder}`}
           >
             <option value="all">All</option>
             <option value="watched">Watched</option>
@@ -187,7 +202,7 @@ export default function Home() {
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
-            className="w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base"
+            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder}`}
           >
             <option value="none">-- Sorting --</option>
             <option value="title">Title</option>
@@ -198,14 +213,14 @@ export default function Home() {
           <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto">
             <button
               onClick={() => setView('grid')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`}`}
             >
               <Squares2X2Icon className="w-5 h-5" />
               Gallery
             </button>
             <button
               onClick={() => setView('list')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`}`}
             >
               <Bars3Icon className="w-5 h-5" />
               List
@@ -224,7 +239,6 @@ export default function Home() {
             </label>
           </div>
         </div>
-
       </div>
 
       <div className={view === 'grid' ? 'grid grid-cols-3 gap-4' : 'flex flex-col gap-3'}>

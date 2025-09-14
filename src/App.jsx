@@ -6,10 +6,22 @@ import Stats from './pages/Stats';
 
 function App() {
   const [animes, setAnimes] = useState([]);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('animes');
-    if (stored) setAnimes(JSON.parse(stored));
+
+    if (stored)
+      setAnimes(JSON.parse(stored));
+
+    setIsDark(document.documentElement.classList.contains('dark'));
+
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleUpdateAnime = (id, patch) => {
@@ -18,8 +30,11 @@ function App() {
     localStorage.setItem('animes', JSON.stringify(updated));
   };
 
+  const baseBg = isDark ? 'bg-gray-900' : 'bg-gray-50';
+  const baseText = isDark ? 'text-gray-100' : 'text-gray-900';
+
   return (
-    <div className="App">
+    <div className={`App min-h-screen ${baseBg} ${baseText}`}>
       <Navbar />
 
       <div className="p-4">
@@ -39,4 +54,3 @@ function App() {
 }
 
 export default App;
-

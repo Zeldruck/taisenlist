@@ -25,10 +25,10 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-2 overflow-auto">
-      <div className="bg-white rounded-lg p-4 w-full sm:max-w-md md:max-w-lg relative flex flex-col gap-2">
+      <div className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-4 w-full sm:max-w-md md:max-w-lg relative flex flex-col gap-2">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-700 text-xl font-bold"
+          className="absolute top-2 right-2 text-gray-700 dark:text-gray-300 text-xl font-bold"
         >
           ✖
         </button>
@@ -47,7 +47,7 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
           {anime.tags?.map((t, i) => (
             <span
               key={i}
-              className="text-[10px] md:text-xs bg-blue-200 px-1 py-0.5 rounded truncate"
+              className="text-[10px] md:text-xs bg-blue-200 dark:bg-blue-700 text-gray-800 dark:text-gray-700 px-1 py-0.5 rounded truncate"
               title={t}
             >
               {t}
@@ -59,7 +59,7 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
           {[1, 2, 3, 4, 5].map(star => (
             <button
               key={star}
-              className={`text-lg ${rating >= star ? 'text-yellow-500' : 'text-gray-300'}`}
+              className={`text-lg ${rating >= star ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}
               onClick={() => handleRating(star)}
             >
               ★
@@ -71,19 +71,19 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
           value={comment}
           onChange={handleCommentChange}
           placeholder="Add a comment"
-          className="w-full border p-2 rounded mb-2 resize-none"
+          className="w-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2 rounded mb-2 resize-none"
         />
 
         <div className="flex justify-between gap-2">
           <button
             onClick={handleCommentSave}
-            className="px-3 py-1 bg-blue-600 text-white rounded"
+            className="px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600"
           >
             Save
           </button>
           <button
             onClick={handleDelete}
-            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            className="px-3 py-1 bg-red-500 dark:bg-red-600 text-white rounded hover:bg-red-600 dark:hover:bg-red-500"
           >
             Delete Anime
           </button>

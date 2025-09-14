@@ -1,12 +1,33 @@
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("darkMode");
+    if (saved === "true") {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    if (darkMode) {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
+    setDarkMode(!darkMode);
+    localStorage.setItem("darkMode", !darkMode);
+  };
+
   const linkStyle = ({ isActive }) =>
-    `px-4 py-2 rounded ${isActive ? "bg-blue-500 text-white" : "bg-gray-200"}`;
+    `px-4 py-2 rounded ${isActive ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-gray-900"}`;
 
   return (
-    <nav className="flex items-center gap-2 p-4 bg-white shadow">
+    <nav className="flex items-center gap-2 p-4 bg-gray-100 dark:bg-gray-900 shadow">
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
         <NavLink to="/" className={linkStyle}>Home</NavLink>
       </motion.div>
@@ -26,7 +47,7 @@ export default function Navbar() {
         whileTap={{ scale: 0.95 }}
       >
         <svg 
-          className="w-6 h-6 text-gray-800" 
+          className="w-6 h-6 text-gray-800 dark:text-gray-200" 
           fill="currentColor" 
           viewBox="0 0 24 24" 
           xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +65,16 @@ export default function Navbar() {
           />
         </svg>
       </motion.a>
+
+      <motion.button
+        onClick={toggleDarkMode}
+        className="ml-2 px-3 py-1 rounded text-gray-800 dark:text-gray-200"
+        title="Toggle Dark / Light mode"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {darkMode ? "🌙" : "☀️"}
+      </motion.button>
     </nav>
   );
 }

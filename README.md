@@ -89,7 +89,8 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ✅ ~~🔎 Local anime & tag search bar~~ \
 ✅ ~~📊 Basic stats~~ \
 ⬜ 🔔 Notifications for airing anime \
-⬜ 🌙 Dark / Light mode toggle \
+✅ 🌙 Dark / Light mode toggle \
+⬜ 🌙 Animated dark mode: smooth transitions across all elements \
 ✅ ~~📱 Improved mobile responsive design~~ \
 ⬜ ☁️ Optional cloud backup sync \
 ⬜ 🎯 Personalized recommendations based on genres and ratings \
@@ -106,7 +107,6 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ⬜ 🏆 Top 5 favorite genres or top-rated anime \
 ⬜ 🏢 Distribution by studio or author if that info is added \
 ⬜ 🎖️ Badges / Achievements: e.g., “10 anime watched”, “First 5★ rating” \
-⬜ 🌙 Animated dark mode: smooth transitions across all elements \
 ⬜ 🎲 Mini quizzes or random suggestions to discover new anime \
 
 ---
