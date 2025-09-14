@@ -88,6 +88,7 @@ export default function Home() {
 
   const addAnimeFromAPI = async (anime) => {
     if (!anime) return;
+
     const newAnime = {
       id: anime.mal_id,
       title: anime.title,
@@ -206,14 +207,28 @@ export default function Home() {
             {suggestions.map(anime => (
               <li
                 key={anime.mal_id}
-                className={`p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer transition-colors duration-500`}
+                className={`flex items-center gap-2 p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer transition-colors duration-500`}
                 onClick={() => addAnimeFromAPI(anime)}
               >
-                {anime.title}
+                {/* Cover image */}
+                <img
+                  src={anime.images?.jpg?.image_url}
+                  alt={anime.title}
+                  className="w-12 h-16 object-cover rounded flex-shrink-0"
+                />
+
+                {/* Titles */}
+                <div className="flex flex-col overflow-hidden">
+                  <div className="font-medium truncate">{anime.title}</div>
+                  {anime.title_english && anime.title_english !== anime.title && (
+                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">{anime.title_english}</div>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
         )}
+
 
         <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
           <input
