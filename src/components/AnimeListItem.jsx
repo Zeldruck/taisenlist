@@ -31,7 +31,7 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
           alt={anime.title}
           className="w-full h-full object-cover rounded transition-all duration-500"
         />
-        
+
         <FavoriteButton 
           anime={anime}
           onUpdate={onUpdate}
@@ -40,11 +40,19 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
 
       <div className="flex flex-col flex-grow">
         <div className="flex justify-between items-center mb-1">
-          <h3 className="font-semibold text-lg">{anime.title}</h3>
+          <div className="flex flex-col">
+            <h3 className="font-semibold text-lg truncate">{anime.title}</h3>
+            {anime.title_english && anime.title_english !== anime.title && (
+              <p className="font-semibold text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                {anime.title_english}
+              </p>
+            )}
+          </div>
           <span className="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-500">
             {anime.year || '?'}
           </span>
         </div>
+
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-3 transition-colors duration-500">
           {anime.description}
         </p>

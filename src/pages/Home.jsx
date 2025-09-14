@@ -95,6 +95,7 @@ export default function Home() {
     const newAnime = {
       id: anime.mal_id,
       title: anime.title,
+      title_english: anime.title_english,
       image: anime.images.jpg.image_url,
       description: anime.synopsis,
       year: anime.aired?.from ? new Date(anime.aired.from).getFullYear() : undefined,
@@ -132,41 +133,36 @@ export default function Home() {
     const queryLower = searchLocal.toLowerCase().trim();
     const tokens = queryLower.split(/\s+/);
 
-    displayedAnimes = displayedAnimes.filter(a => {
-      const title = a.title.toLowerCase();
-      const tags = (a.tags || []).map(t => t.toLowerCase());
+    const matchesAnime = (anime, term) => {
+      const fields = [
+        anime.title.toLowerCase(),
+        (anime.title_english || '').toLowerCase(),
+        ...(anime.tags || []).map(t => t.toLowerCase())
+      ];
 
-      return tokens.every(token => {
-        if (token.includes("|")) {
-          const orParts = token.split("|").map(t => t.trim());
+      return fields.some(f => f.includes(term));
+    };
 
-          return orParts.some(part => {
-            if (part.startsWith("-")) {
-              const term = part.slice(1);
-              return !(title.includes(term) || tags.some(tag => tag.includes(term)));
-            }
-            if (part.startsWith("+")) {
-              const term = part.slice(1);
-              return title.includes(term) || tags.some(tag => tag.includes(term));
-            }
-            const term = part;
-            return title.includes(term) || tags.some(tag => tag.includes(term));
-          });
-        }
+    const evaluateToken = (anime, token) => {
+      // Handle OR operator
+      if (token.includes("|")) {
+        return token.split("|").some(part => evaluateToken(anime, part.trim()));
+      }
 
-        if (token.startsWith("-")) {
-          const term = token.slice(1);
-          return !(title.includes(term) || tags.some(tag => tag.includes(term)));
-        }
-        if (token.startsWith("+")) {
-          const term = token.slice(1);
-          return title.includes(term) || tags.some(tag => tag.includes(term));
-        }
-        const term = token;
-        return title.includes(term) || tags.some(tag => tag.includes(term));
-      });
-    });
+      // Handle + and -
+      if (token.startsWith("+")) return matchesAnime(anime, token.slice(1));
+      if (token.startsWith("-")) return !matchesAnime(anime, token.slice(1));
+
+      // Default: just match term
+      return matchesAnime(anime, token);
+    };
+
+    displayedAnimes = displayedAnimes.filter(anime =>
+      tokens.every(token => evaluateToken(anime, token))
+    );
   }
+
+
 
   if (filter !== 'all') {
     displayedAnimes = displayedAnimes.filter(a => {
