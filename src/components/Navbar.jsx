@@ -7,7 +7,6 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center gap-2 p-4 bg-white shadow">
-      {/* Animated NavLinks */}
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
         <NavLink to="/" className={linkStyle}>Home</NavLink>
       </motion.div>
@@ -17,7 +16,6 @@ export default function Navbar() {
 
       <div className="flex-grow" />
 
-      {/* GitHub icon with Framer Motion hover effect */}
       <motion.a
         href="https://github.com/Zeldruck/zelanime-watch"
         target="_blank"

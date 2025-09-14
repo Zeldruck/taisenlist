@@ -166,7 +166,6 @@ export default function Home() {
         )}
 
         <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
-          {/* Search input */}
           <input
             value={searchLocal}
             onChange={e => setSearchLocal(e.target.value)}
@@ -174,7 +173,6 @@ export default function Home() {
             className="w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base"
           />
 
-          {/* Filter select */}
           <select
             value={filter}
             onChange={e => setFilter(e.target.value)}
@@ -186,7 +184,6 @@ export default function Home() {
             <option value="top">⭐ Top</option>
           </select>
 
-          {/* Sort select */}
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
@@ -198,7 +195,6 @@ export default function Home() {
             <option value="year">Year</option>
           </select>
 
-          {/* Action buttons */}
           <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto">
             <button
               onClick={() => setView('grid')}
