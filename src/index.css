@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100 text-gray-800 font-sans;
+}
+
+input, textarea, select {
+  @apply border rounded p-2 outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+button {
+  @apply cursor-pointer transition transform hover:scale-105;
+}
+
+nav {
+  @apply flex gap-2 p-4 bg-white shadow;
+}
+
+/* Cards */
+.AnimeCard, .AnimeListItem {
+  @apply bg-white rounded-lg shadow p-2 cursor-pointer transition hover:shadow-lg;
+}
+
+.AnimeCard img, .AnimeListItem img {
+  @apply rounded-md mb-2 object-cover;
+}
+
+/* Modal */
+.modal {
+  @apply fixed inset-0 bg-black bg-black/50 flex justify-center items-center;
+}
+.modal-content {
+  @apply bg-white rounded-lg p-4 max-w-lg w-full;
+}
+
+/* Tags */
+.tag {
+  @apply cursor-pointer text-xs bg-blue-200 px-2 rounded;
+}
+
+/* Rating Stars */
+.star {
+  @apply text-gray-400 hover:text-yellow-500;
+}
+.star-selected {
+  @apply text-yellow-500;
+}
+
+/* Responsive grid */
+.grid-gallery {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-4;
+}
+
+/* Utilities */
+.mt-2 { @apply mt-2; }
+.mb-2 { @apply mb-2; }
+.font-semibold { @apply font-semibold; }
+.text-sm { @apply text-sm; }
+.text-xs { @apply text-xs; }
+.bg-gray-200 { @apply bg-gray-200; }
+.bg-blue-200 { @apply bg-blue-200; }
+.bg-white { @apply bg-white; }
+.bg-gray-300 { @apply bg-gray-300; }
+.bg-green-500 { @apply bg-green-500; }
+.text-white { @apply text-white; }
+.text-gray-500 { @apply text-gray-500; }
+.text-yellow-500 { @apply text-yellow-500; }
