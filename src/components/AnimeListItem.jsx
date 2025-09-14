@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import FavoriteButton from './FavoriteButton';
 
 export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -24,11 +25,19 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
                  bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-500"
       onClick={() => onOpenDetails(anime)}
     >
-      <img
-        src={anime.image}
-        alt={anime.title}
-        className="w-full md:w-24 h-48 md:h-32 object-cover rounded transition-all duration-500"
-      />
+      <div className="relative w-full md:w-24 h-48 md:h-32 flex-shrink-0">
+        <img
+          src={anime.image}
+          alt={anime.title}
+          className="w-full h-full object-cover rounded transition-all duration-500"
+        />
+        
+        <FavoriteButton 
+          anime={anime}
+          onUpdate={onUpdate}
+        />
+      </div>
+
       <div className="flex flex-col flex-grow">
         <div className="flex justify-between items-center mb-1">
           <h3 className="font-semibold text-lg">{anime.title}</h3>

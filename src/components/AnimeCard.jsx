@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import FavoriteButton from './FavoriteButton';
 
 export default function AnimeCard({ anime, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
   const [hovered, setHovered] = useState(false);
@@ -8,21 +9,30 @@ export default function AnimeCard({ anime, onToggleWatched, onOpenDetails, onUpd
     onUpdate(anime.id, { rating });
   };
 
+
   return (
     <motion.div
       layout
       whileHover={{ scale: 1.03 }}
-      className="rounded-lg shadow overflow-hidden cursor-pointer flex flex-col sm:flex-col md:flex-col
+      className="relative rounded-lg shadow overflow-hidden cursor-pointer flex flex-col sm:flex-col md:flex-col
                 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-500"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onOpenDetails(anime)}
     >
-      <img
-        src={anime.image}
-        alt={anime.title}
-        className="w-full sm:h-48 md:h-56 lg:h-64 object-cover transition-all duration-500"
-      />
+      <div className="relative">
+        <img
+          src={anime.image}
+          alt={anime.title}
+          className="w-full sm:h-48 md:h-56 lg:h-64 object-cover transition-all duration-500"
+        />
+
+        <FavoriteButton 
+          anime={anime}
+          onUpdate={onUpdate}
+        />
+      </div>
+
       <div className="p-3 flex flex-col flex-grow">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
           <h3 className="font-semibold text-lg truncate">{anime.title}</h3>
@@ -88,6 +98,5 @@ export default function AnimeCard({ anime, onToggleWatched, onOpenDetails, onUpd
         </div>
       </div>
     </motion.div>
-
   );
 }

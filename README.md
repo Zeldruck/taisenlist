@@ -95,7 +95,7 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ⬜ ☁️ Optional cloud backup sync \
 ⬜ 🎯 Personalized recommendations based on genres and ratings \
 ⬜ 🏷️ Drag & Drop to reorder your anime list \
-⬜ ⭐ Favorites / Starred: mark certain anime as “important” \
+✅ ~~⭐ Favorites / Starred: mark certain anime as “important”~~ \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
 ✅ ~~🔍 Combined filtering: e.g., “action + fantasy + not watched”~~ \
 ⬜ 🏷️ Tag management: add/remove tags directly in the app \

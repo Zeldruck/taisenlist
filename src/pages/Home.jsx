@@ -100,7 +100,9 @@ export default function Home() {
       ],
       watched: false,
       rating: 0,
+      favorite: false,
     };
+
     setAnimes(prev => {
       const updated = [...prev, newAnime];
       localStorage.setItem('animes', JSON.stringify(updated));
@@ -167,6 +169,7 @@ export default function Home() {
       if (filter === 'watched') return a.watched;
       if (filter === 'unwatched') return !a.watched;
       if (filter === 'top') return a.rating >= 4;
+      if (filter === 'favorites') return a.favorite;
       return true;
     });
   }
@@ -229,6 +232,7 @@ export default function Home() {
             <option value="watched">Watched</option>
             <option value="unwatched">To watch</option>
             <option value="top">⭐ Top</option>
+            <option value="favorites">❤️ Favorites</option>
           </select>
 
           <select
