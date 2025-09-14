@@ -155,23 +155,23 @@ export default function Home() {
   const dropdownBg = isDark ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900';
 
   return (
-    <div className={`p-4 ${baseBg} ${baseText} min-h-screen`}>
-      <div className={`p-4 rounded shadow mb-6 relative border ${baseBorder}`}>
+    <div className={`p-4 ${baseBg} ${baseText} min-h-screen transition-colors duration-500`}>
+      <div className={`p-4 rounded shadow mb-6 relative border ${baseBorder} transition-colors duration-500`}>
         <div className="flex gap-2 mb-3">
           <input 
             value={query} 
             onChange={handleQueryChange} 
             placeholder="Add an anime (API Jikan)" 
-            className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder}`} 
+            className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder} transition-colors duration-500`} 
           />
         </div>
 
         {suggestions.length > 0 && (
-          <ul className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto ${dropdownBg} border ${baseBorder}`}>
+          <ul className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto ${dropdownBg} border ${baseBorder} transition-colors duration-500`}>
             {suggestions.map(anime => (
               <li
                 key={anime.mal_id}
-                className={`p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer`}
+                className={`p-2 hover:${isDark ? 'bg-gray-700' : 'bg-gray-200'} cursor-pointer transition-colors duration-500`}
                 onClick={() => addAnimeFromAPI(anime)}
               >
                 {anime.title}
@@ -185,13 +185,13 @@ export default function Home() {
             value={searchLocal}
             onChange={e => setSearchLocal(e.target.value)}
             placeholder="🔍 Search locally or by tag name"
-            className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder}`}
+            className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder} transition-colors duration-500`}
           />
 
           <select
             value={filter}
             onChange={e => setFilter(e.target.value)}
-            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder}`}
+            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
           >
             <option value="all">All</option>
             <option value="watched">Watched</option>
@@ -202,7 +202,7 @@ export default function Home() {
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
-            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder}`}
+            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
           >
             <option value="none">-- Sorting --</option>
             <option value="title">Title</option>
@@ -210,29 +210,29 @@ export default function Home() {
             <option value="year">Year</option>
           </select>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto">
+          <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
             <button
               onClick={() => setView('grid')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`}`}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
             >
               <Squares2X2Icon className="w-5 h-5" />
               Gallery
             </button>
             <button
               onClick={() => setView('list')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`}`}
+              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
             >
               <Bars3Icon className="w-5 h-5" />
               List
             </button>
             <button
               onClick={exportJSON}
-              className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white"
+              className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
             >
               <ArrowUpTrayIcon className="w-5 h-5" />
               Export
             </button>
-            <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer">
+            <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
               <ArrowDownTrayIcon className="w-5 h-5" />
               Import
               <input type="file" accept=".json" onChange={importJSON} className="hidden" />
@@ -241,7 +241,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={view === 'grid' ? 'grid grid-cols-3 gap-4' : 'flex flex-col gap-3'}>
+      <div className={`${view === 'grid' ? 'grid grid-cols-3 gap-4' : 'flex flex-col gap-3'} transition-colors duration-500`}>
         {displayedAnimes.map(anime => (
           view === 'grid' ? (
             <AnimeCard
@@ -273,5 +273,6 @@ export default function Home() {
         />
       )}
     </div>
+
   );
 }

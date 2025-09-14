@@ -24,10 +24,10 @@ export default function Navbar() {
   };
 
   const linkStyle = ({ isActive }) =>
-    `px-4 py-2 rounded ${isActive ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-gray-900"}`;
+    `px-4 py-2 rounded transition-colors duration-500 ${isActive ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700 dark:text-gray-700"}`;
 
   return (
-    <nav className="flex items-center gap-2 p-4 bg-gray-100 dark:bg-gray-900 shadow">
+    <nav className="flex items-center gap-2 p-4 bg-gray-100 dark:bg-gray-900 shadow dark:shadow-black transition-colors duration-500">
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
         <NavLink to="/" className={linkStyle}>Home</NavLink>
       </motion.div>
@@ -41,13 +41,13 @@ export default function Navbar() {
         href="https://github.com/Zeldruck/zelanime-watch"
         target="_blank"
         rel="noopener noreferrer"
-        className="px-2 py-1 rounded flex items-center"
+        className="px-2 py-1 rounded flex items-center transition-colors duration-500"
         title="View on GitHub"
         whileHover={{ scale: 1.2, rotate: 10 }}
         whileTap={{ scale: 0.95 }}
       >
         <svg 
-          className="w-6 h-6 text-gray-800 dark:text-gray-200" 
+          className="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-500" 
           fill="currentColor" 
           viewBox="0 0 24 24" 
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ export default function Navbar() {
 
       <motion.button
         onClick={toggleDarkMode}
-        className="ml-2 px-3 py-1 rounded text-gray-800 dark:text-gray-200"
+        className="ml-2 px-3 py-1 rounded text-gray-800 dark:text-gray-200 transition-colors duration-500"
         title="Toggle Dark / Light mode"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}

@@ -57,6 +57,12 @@ nav {
   @apply grid grid-cols-2 md:grid-cols-4 gap-4;
 }
 
+.transition-colors-duration {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
+}
+
 /* Utilities */
 .mt-2 { @apply mt-2; }
 .mb-2 { @apply mb-2; }

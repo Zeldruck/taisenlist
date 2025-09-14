@@ -10,9 +10,7 @@ function App() {
 
   useEffect(() => {
     const stored = localStorage.getItem('animes');
-
-    if (stored)
-      setAnimes(JSON.parse(stored));
+    if (stored) setAnimes(JSON.parse(stored));
 
     setIsDark(document.documentElement.classList.contains('dark'));
 
@@ -20,7 +18,6 @@ function App() {
       setIsDark(document.documentElement.classList.contains('dark'));
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
     return () => observer.disconnect();
   }, []);
 
@@ -34,10 +31,10 @@ function App() {
   const baseText = isDark ? 'text-gray-100' : 'text-gray-900';
 
   return (
-    <div className={`App min-h-screen ${baseBg} ${baseText}`}>
+    <div className={`App min-h-screen ${baseBg} ${baseText} transition-colors duration-500`}>
       <Navbar />
 
-      <div className="p-4">
+      <div className="p-4 transition-colors duration-500">
         <Routes>
           <Route
             path="/"
