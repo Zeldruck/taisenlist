@@ -6,28 +6,35 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
   const [tags, setTags] = useState(anime.tags || []);
   const [editingTag, setEditingTag] = useState(false);
   const [newTag, setNewTag] = useState('');
+  const [vh, setVh] = useState(window.innerHeight);
 
   useEffect(() => {
     setRating(anime.rating || 0);
     setComment(anime.comment || '');
     setTags(anime.tags || []);
+
+    document.body.style.overflow = 'hidden';
+    const handleResize = () => setVh(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('resize', handleResize);
+    };
   }, [anime]);
 
   const handleRating = (value) => {
     setRating(value);
     onUpdate(anime.id, { rating: value });
   };
-
   const handleCommentChange = (e) => setComment(e.target.value);
   const handleCommentSave = () => onUpdate(anime.id, { comment });
-
   const handleDelete = () => {
     if (confirm(`Are you sure you want to delete "${anime.title}"?`)) {
       onDelete(anime.id);
       onClose();
     }
   };
-
   const handleAddTag = () => {
     if (!newTag.trim()) return;
     const updatedTags = [...tags, newTag.trim()];
@@ -36,7 +43,6 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
     setNewTag('');
     setEditingTag(false);
   };
-
   const handleRemoveTag = (tagToRemove) => {
     const updatedTags = tags.filter(t => t !== tagToRemove);
     setTags(updatedTags);
@@ -44,11 +50,18 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-2 overflow-auto">
-      <div className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-4 w-full sm:max-w-md md:max-w-lg relative flex flex-col gap-2">
+    <div
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50"
+      style={{ height: `${vh}px` }}
+    >
+      <div
+        className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg
+                   w-full sm:w-[90%] md:w-[600px] max-h-[90vh] overflow-auto p-4
+                   flex flex-col gap-4 shadow-lg relative"
+      >
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-700 dark:text-gray-300 text-xl font-bold"
+          className="absolute top-3 right-3 text-gray-700 dark:text-gray-300 text-xl font-bold z-10"
         >
           ✖
         </button>
@@ -58,12 +71,12 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
         <img
           src={anime.image}
           alt={anime.title}
-          className="w-full h-64 sm:h-56 md:h-64 object-cover rounded mb-2"
+          className="w-full h-64 object-cover rounded"
         />
 
-        <p className="text-sm mb-2">{anime.description}</p>
+        <p className="text-sm">{anime.description}</p>
 
-        <div className="flex flex-wrap gap-2 mb-2">
+        <div className="flex flex-wrap gap-2">
           {tags.map((t, i) => (
             <div
               key={i}
@@ -100,8 +113,8 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
           )}
         </div>
 
-        <div className="flex items-center gap-1 mb-2">
-          {[1, 2, 3, 4, 5].map(star => (
+        <div className="flex items-center gap-1">
+          {[1,2,3,4,5].map(star => (
             <button
               key={star}
               className={`text-lg ${rating >= star ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}

@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from 'framer-motion';
 import { Squares2X2Icon, Bars3Icon, ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, rectSortingStrategy, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import SortableItem from "../components/SortableItem";
+
+
 import AnimeCard from '../components/AnimeCard';
 import AnimeListItem from '../components/AnimeListItem';
 import AnimeDetailsModal from '../components/AnimeDetailsModal';
@@ -17,6 +22,7 @@ export default function Home() {
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('none');
   const [isDark, setIsDark] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const debounceRef = useRef(null);
 
   useEffect(() => {
@@ -128,6 +134,10 @@ export default function Home() {
     }, 1000);
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
   let displayedAnimes = [...animes];
   if (searchLocal) {
     const queryLower = searchLocal.toLowerCase().trim();
@@ -163,7 +173,6 @@ export default function Home() {
   }
 
 
-
   if (filter !== 'all') {
     displayedAnimes = displayedAnimes.filter(a => {
       if (filter === 'watched') return a.watched;
@@ -193,15 +202,17 @@ export default function Home() {
     <div className={`p-4 ${baseBg} ${baseText} min-h-screen transition-colors duration-500`}>
       <div className={`p-4 rounded shadow mb-6 relative border ${baseBorder} transition-colors duration-500`}>
         <div className="flex gap-2 mb-3">
-          <input 
-            value={query} 
-            onChange={handleQueryChange} 
-            placeholder="Add an anime (API Jikan)" 
-            className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder} transition-colors duration-500`} 
-          />
+          {!isEditing && (
+            <input 
+              value={query} 
+              onChange={handleQueryChange} 
+              placeholder="Add an anime (API Jikan)" 
+              className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder} transition-colors duration-500`} 
+            />
+          )}
         </div>
 
-        {suggestions.length > 0 && (
+        {!isEditing && suggestions.length > 0 && (
           <ul
             className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto overflow-x-hidden ${dropdownBg} border ${baseBorder} transition-colors duration-500
                         scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
@@ -263,90 +274,134 @@ export default function Home() {
         )}
 
         <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
-          <input
-            value={searchLocal}
-            onChange={e => setSearchLocal(e.target.value)}
-            placeholder="🔍 Search locally or by tag name"
-            className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder} transition-colors duration-500`}
-          />
-
-          <select
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
+          <button
+            onClick={() => {
+              setIsEditing(!isEditing);
+              if (!isEditing) {
+                setSearchLocal('');
+                setFilter('all');
+                setSort('none');
+              } else {
+                localStorage.setItem('animes', JSON.stringify(animes));
+              }
+            }}
+            className={`px-4 py-2 rounded ${isEditing ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}
           >
-            <option value="all">All</option>
-            <option value="watched">Watched</option>
-            <option value="unwatched">To watch</option>
-            <option value="top">⭐ Top</option>
-            <option value="favorites">❤️ Favorites</option>
-          </select>
+            {isEditing ? 'Done' : 'Edit'}
+          </button>
 
-          <select
-            value={sort}
-            onChange={e => setSort(e.target.value)}
-            className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
-          >
-            <option value="none">-- Sorting --</option>
-            <option value="title">Title</option>
-            <option value="rating">Stars</option>
-            <option value="year">Year</option>
-          </select>
+          {!isEditing && (
+            <>
+            <input
+              value={searchLocal}
+              onChange={e => setSearchLocal(e.target.value)}
+              placeholder="🔍 Search locally or by tag name"
+              className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder} transition-colors duration-500`}
+            />
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
-            <button
-              onClick={() => setView('grid')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+            <select
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
             >
-              <Squares2X2Icon className="w-5 h-5" />
-              Gallery
-            </button>
-            <button
-              onClick={() => setView('list')}
-              className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+              <option value="all">All</option>
+              <option value="watched">Watched</option>
+              <option value="unwatched">To watch</option>
+              <option value="top">⭐ Top</option>
+              <option value="favorites">❤️ Favorites</option>
+            </select>
+
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value)}
+              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
             >
-              <Bars3Icon className="w-5 h-5" />
-              List
-            </button>
-            <button
-              onClick={exportJSON}
-              className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
-            >
-              <ArrowUpTrayIcon className="w-5 h-5" />
-              Export
-            </button>
-            <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
-              <ArrowDownTrayIcon className="w-5 h-5" />
-              Import
-              <input type="file" accept=".json" onChange={importJSON} className="hidden" />
-            </label>
-          </div>
+              <option value="none">-- Sorting --</option>
+              <option value="title">Title</option>
+              <option value="rating">Stars</option>
+              <option value="year">Year</option>
+            </select>
+
+              <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
+                <button
+                  onClick={() => setView('grid')}
+                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+                >
+                  <Squares2X2Icon className="w-5 h-5" />
+                  Gallery
+                </button>
+                <button
+                  onClick={() => setView('list')}
+                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+                >
+                  <Bars3Icon className="w-5 h-5" />
+                  List
+                </button>
+                <button
+                  onClick={exportJSON}
+                  className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
+                >
+                  <ArrowUpTrayIcon className="w-5 h-5" />
+                  Export
+                </button>
+                <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
+                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  Import
+                  <input type="file" accept=".json" onChange={importJSON} className="hidden" />
+                </label>
+              </div>
+            </>
+            )}
         </div>
       </div>
 
-      <div className={`${view === 'grid' ? 'grid grid-cols-3 gap-4' : 'flex flex-col gap-3'} transition-colors duration-500`}>
-        {displayedAnimes.map(anime => (
-          view === 'grid' ? (
-            <AnimeCard
-              key={anime.id}
-              anime={anime}
-              onToggleWatched={handleToggleWatched}
-              onOpenDetails={handleOpenDetails}
-              onUpdate={handleUpdateAnime}
-              onDelete={handleDeleteAnime}
-            />
-          ) : (
-            <AnimeListItem
-              key={anime.id}
-              anime={anime}
-              onToggleWatched={handleToggleWatched}
-              onOpenDetails={handleOpenDetails}
-              onUpdate={handleUpdateAnime}
-              onDelete={handleDeleteAnime}
-            />
-          )
-        ))}
-      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={(event) => {
+          const { active, over } = event;
+          if (!over || !isEditing) return;
+          if (active.id !== over.id) {
+            setAnimes((items) => {
+              const oldIndex = items.findIndex((i) => i.id === active.id);
+              const newIndex = items.findIndex((i) => i.id === over.id);
+              return arrayMove(items, oldIndex, newIndex);
+            });
+          }
+        }}
+      >
+        <SortableContext
+          items={displayedAnimes.map((a) => a.id)}
+          strategy={view === "grid" ? rectSortingStrategy : verticalListSortingStrategy}
+        >
+          <div className={view === "grid" ? "grid grid-cols-2 sm:grid-cols-3 gap-4" : "flex flex-col gap-3 w-full"}>
+            {displayedAnimes.map((anime) => (
+              <SortableItem key={anime.id} id={anime.id} isEditing={isEditing}>
+                <div className="draggable-item w-full" style={{ touchAction: isEditing ? "none" : "auto" }}>
+                  {view === "grid" ? (
+                    <AnimeCard
+                      anime={anime}
+                      onToggleWatched={isEditing ? () => {} : handleToggleWatched}
+                      onOpenDetails={isEditing ? () => {} : handleOpenDetails}
+                      onUpdate={handleUpdateAnime}
+                      onDelete={handleDeleteAnime}
+                    />
+                  ) : (
+                    <AnimeListItem
+                      anime={anime}
+                      onToggleWatched={isEditing ? () => {} : handleToggleWatched}
+                      onOpenDetails={isEditing ? () => {} : handleOpenDetails}
+                      onUpdate={handleUpdateAnime}
+                      onDelete={handleDeleteAnime}
+                    />
+                  )}
+                </div>
+              </SortableItem>
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+
 
       {selectedAnime && (
         <AnimeDetailsModal

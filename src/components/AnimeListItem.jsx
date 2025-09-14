@@ -39,19 +39,20 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
       </div>
 
       <div className="flex flex-col flex-grow">
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex flex-col">
-            <h3 className="font-semibold text-lg truncate">{anime.title}</h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
+          <div className="flex flex-col max-w-full">
+            <h3 className="font-semibold text-lg truncate overflow-hidden">{anime.title}</h3>
             {anime.title_english && anime.title_english !== anime.title && (
-              <p className="font-semibold text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+              <p className="font-semibold text-xs text-gray-500 dark:text-gray-400 truncate overflow-hidden mt-0.5">
                 {anime.title_english}
               </p>
             )}
           </div>
-          <span className="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-500">
+          <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
             {anime.year || '?'}
           </span>
         </div>
+
 
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-3 transition-colors duration-500">
           {anime.description}

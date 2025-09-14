@@ -94,7 +94,7 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ✅ ~~📱 Improved mobile responsive design~~ \
 ⬜ ☁️ Optional cloud backup sync \
 ⬜ 🎯 Personalized recommendations based on genres and ratings \
-⬜ 🏷️ Drag & Drop to reorder your anime list \
+✅ ~~🏷️ Drag & Drop to reorder your anime list~~ \
 ✅ ~~⭐ Favorites / Starred: mark certain anime as “important”~~ \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
 ✅ ~~🔍 Combined filtering: e.g., “action + fantasy + not watched”~~ \
