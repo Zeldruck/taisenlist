@@ -94,17 +94,35 @@ export default function Home() {
   const importJSON = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const data = JSON.parse(ev.target.result);
-      setAnimes(data);
-      localStorage.setItem('animes', JSON.stringify(data));
+      try {
+        const importedData = JSON.parse(ev.target.result);
+
+        if (!Array.isArray(importedData)) {
+          console.error("Invalid format");
+          return;
+        }
+
+        setAnimes((prevAnimes) => {
+          const existingIds = new Set(prevAnimes.map((a) => a.id));
+          const newAnimes = importedData.filter((a) => !existingIds.has(a.id));
+          const merged = [...prevAnimes, ...newAnimes];
+          localStorage.setItem('animes', JSON.stringify(merged));
+
+          return merged;
+        });
+      } catch (err) {
+        console.error("Error while importing JSON :", err);
+      }
     };
     reader.readAsText(file);
   };
 
   const fetchSuggestions = async (searchTerm) => {
     if (!searchTerm) return setSuggestions([]);
+
     try {
       const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchTerm)}&limit=5`);
       const data = await res.json();
@@ -117,6 +135,13 @@ export default function Home() {
 
   const addAnimeFromAPI = async (anime) => {
     if (!anime) return;
+
+    if (animes.some(x => x.id === anime.id))
+    {
+      setQuery('');
+      setSuggestions([]);
+      return;
+    }
 
     const newAnime = {
       id: anime.mal_id,
