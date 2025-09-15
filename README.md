@@ -92,7 +92,6 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 ✅ ~~🌙 Animated dark mode: smooth transitions across all elements~~ \
 ✅ ~~📱 Improved mobile responsive design~~ \
 ✅ ~~🏷️ Drag & Drop to reorder your anime list~~ \
-⬜ 🏷️ Upgraded Drag & Drop
 ✅ ~~⭐ Favorites / Starred: mark certain anime as “important”~~ \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
 ⬜ 🎯 Multi-selection (Shift+click or checkbox) to modify multiple animes at once (e.g., mark several as favorites, watched, or delete) \
