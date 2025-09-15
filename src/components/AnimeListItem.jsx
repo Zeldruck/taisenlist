@@ -23,8 +23,8 @@ export default function AnimeListItem({ anime, getWatchType, onToggleWatched, on
     <motion.div
       layout
       whileHover={{ scale: 1.01 }}
-      className="rounded-lg shadow p-3 flex flex-col md:flex-row gap-3 cursor-pointer
-                 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-500"
+      className={`rounded-lg shadow-md dark:shadow-lg p-3 flex flex-col md:flex-row gap-3 cursor-pointer
+                  bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-all duration-500`}
       onClick={() => onOpenDetails(anime)}
     >
       <div className="relative w-full md:w-24 h-48 md:h-32 flex-shrink-0">
@@ -40,7 +40,7 @@ export default function AnimeListItem({ anime, getWatchType, onToggleWatched, on
         />
       </div>
 
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow transition-colors duration-500">
         <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
           <div className="flex flex-col max-w-full">
             <h3 className="font-semibold text-lg truncate overflow-hidden">{anime.title}</h3>
@@ -50,11 +50,10 @@ export default function AnimeListItem({ anime, getWatchType, onToggleWatched, on
               </p>
             )}
           </div>
-          <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
+          <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-0 transition-colors duration-500">
             {anime.year || '?'}
           </span>
         </div>
-
 
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-3 transition-colors duration-500">
           {anime.description}
@@ -65,7 +64,7 @@ export default function AnimeListItem({ anime, getWatchType, onToggleWatched, on
             <span
               key={i}
               className="text-[10px] md:text-xs px-1 py-0.5 rounded truncate
-                         bg-blue-200 dark:bg-blue-700 text-gray-800 dark:text-gray-700 transition-colors duration-500"
+                        bg-blue-200 dark:bg-blue-700 text-gray-800 transition-colors duration-500"
               title={tag}
             >
               {tag}
@@ -73,7 +72,7 @@ export default function AnimeListItem({ anime, getWatchType, onToggleWatched, on
           ))}
           {anime.tags && anime.tags.length > maxTags && (
             <span className="text-[10px] md:text-xs px-1 py-0.5 rounded
-                             bg-blue-200 dark:bg-blue-700 text-gray-800 dark:text-gray-700 transition-colors duration-500">
+                            bg-blue-200 dark:bg-blue-700 text-gray-800 transition-colors duration-500">
               +{anime.tags.length - maxTags}
             </span>
           )}

@@ -6,18 +6,32 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-body {
-  @apply text-gray-800 font-sans;
+
+:root {
+  --initial-dark: 'false';
+}
+html {
+  background-color: #f9fafb; /* bg-gray-50 */
+  color: #111827; /* text-gray-900 */
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
+html.dark {
+  background-color: #111827; /* bg-gray-900 */
+  color: #f9fafb; /* text-gray-100 */
+}
+
+/* Inputs / textarea / select */
 input, textarea, select {
   @apply border rounded p-2 outline-none focus:ring-2 focus:ring-blue-400;
 }
 
+/* Buttons */
 button {
   @apply cursor-pointer transition transform hover:scale-105;
 }
 
+/* Nav */
 nav {
   @apply flex gap-2 p-4 shadow;
 }
@@ -26,7 +40,6 @@ nav {
 .AnimeCard, .AnimeListItem {
   @apply rounded-lg shadow p-2 cursor-pointer transition hover:shadow-lg;
 }
-
 .AnimeCard img, .AnimeListItem img {
   @apply rounded-md mb-2 object-cover;
 }
@@ -44,7 +57,7 @@ nav {
   @apply cursor-pointer text-xs bg-blue-200 px-2 rounded;
 }
 
-/* Rating Stars */
+/* Rating stars */
 .star {
   @apply text-gray-400 hover:text-yellow-500;
 }
@@ -55,12 +68,6 @@ nav {
 /* Responsive grid */
 .grid-gallery {
   @apply grid grid-cols-2 md:grid-cols-4 gap-4;
-}
-
-.transition-colors-duration {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 500ms;
-  transition-timing-function: ease-in-out;
 }
 
 /* Utilities */

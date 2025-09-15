@@ -55,11 +55,11 @@ export default function Home() {
 
     switch (n) {
       case 'W':
-        return [watchTypeNames[ind], 'bg-green-500'];
+        return [watchTypeNames[ind], 'bg-green-500 hover:bg-green-600'];
       case 'TW':
         return [watchTypeNames[ind], 'bg-gray-500 dark:bg-gray-700'];
       case 'IP':
-        return [watchTypeNames[ind], 'bg-blue-500'];
+        return [watchTypeNames[ind], 'bg-blue-500 hover:bg-blue-600'];
       default:
         return ["", 'bg-gray-500 dark:bg-gray-700'];
     }
@@ -147,7 +147,7 @@ export default function Home() {
       id: anime.mal_id,
       title: anime.title,
       title_english: anime.title_english,
-      image: anime.images.jpg.image_url,
+      image: anime.images.webp.large_image_url,
       description: anime.synopsis,
       year: anime.aired?.from ? new Date(anime.aired.from).getFullYear() : undefined,
       tags: [
@@ -238,11 +238,7 @@ export default function Home() {
     });
   }
 
-  const baseBg = isDark ? 'bg-gray-900' : 'bg-gray-50';
-  const baseBorder = isDark ? 'border-gray-700' : 'border-gray-300';
-  const baseText = isDark ? 'text-gray-100' : 'text-gray-900';
-  const inputBg = isDark ? 'bg-gray-800 text-gray-100 placeholder-gray-400' : 'bg-white text-gray-900 placeholder-gray-500';
-  const dropdownBg = isDark ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900';
+
 
   return (
     <motion.div
@@ -253,11 +249,11 @@ export default function Home() {
           : '0 0 10px rgba(0,0,0,0.1)',
         transition: { duration: 0.3 }
       }}
-      className={`p-4 ${baseBg} ${baseText} min-h-screen rounded relative transition-colors duration-500`}
+      className={`p-4 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen rounded relative transition-colors duration-500`}
     >
       <div
         className={`p-4 rounded shadow mb-6 relative border transition-colors duration-500
-          ${isEditing ? 'border-4 border-green-600 bg-green-50 dark:bg-green-900' : baseBorder}`}
+          ${isEditing ? 'border-4 border-green-600 bg-green-50 dark:bg-green-900' : 'border-gray-300 dark:border-gray-700' }`}
       >
         <div className="flex gap-2 mb-3">
           {!isEditing && (
@@ -265,14 +261,14 @@ export default function Home() {
               value={query} 
               onChange={handleQueryChange} 
               placeholder="Add an anime (API Jikan)" 
-              className={`flex-grow border p-2 rounded ${inputBg} border ${baseBorder} transition-colors duration-500`} 
+              className={`flex-grow border p-2 rounded bg-gray-100 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-700 transition-colors duration-500`} 
             />
           )}
         </div>
 
         {!isEditing && suggestions.length > 0 && (
           <ul
-            className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto overflow-x-hidden ${dropdownBg} border ${baseBorder} transition-colors duration-500
+            className={`absolute border rounded mt-1 w-full z-50 max-h-60 overflow-y-auto overflow-x-hidden bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500
                         scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
           >
             {suggestions.map(anime => {
@@ -343,16 +339,21 @@ export default function Home() {
                 localStorage.setItem('animes', JSON.stringify(animes));
               }
             }}
+            initial={{
+              scale: isEditing ? 1.2 : 1,
+              padding: isEditing ? '1rem 5rem' : '0.5rem 1rem'
+            }}
             animate={{
               scale: isEditing ? 1.2 : 1,
               padding: isEditing ? '1rem 5rem' : '0.5rem 1rem'
             }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className={`px-4 py-2 rounded flex items-center justify-center gap-2 transition-colors duration-300
+            className={`rounded flex items-center justify-center gap-2 transition-colors duration-300
               ${isEditing ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
           >
             {isEditing ? 'Done' : 'Edit'}
           </motion.button>
+
 
           {!isEditing && (
             <>
@@ -360,13 +361,13 @@ export default function Home() {
               value={searchLocal}
               onChange={e => setSearchLocal(e.target.value)}
               placeholder="🔍 Search locally or by tag name"
-              className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base ${inputBg} border ${baseBorder} transition-colors duration-500`}
+              className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
             />
 
             <select
               value={filter}
               onChange={e => setFilter(e.target.value)}
-              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
+              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
             >
               <option value="all">All</option>
               <option value="watched">Watched</option>
@@ -379,7 +380,7 @@ export default function Home() {
             <select
               value={sort}
               onChange={e => setSort(e.target.value)}
-              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base ${dropdownBg} border ${baseBorder} transition-colors duration-500`}
+              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
             >
               <option value="none">-- Sorting --</option>
               <option value="title">Title</option>
@@ -390,14 +391,14 @@ export default function Home() {
               <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
                 <button
                   onClick={() => setView('grid')}
-                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
                 >
                   <Squares2X2Icon className="w-5 h-5" />
                   Gallery
                 </button>
                 <button
                   onClick={() => setView('list')}
-                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border ${baseBorder} ${baseText}`} transition-colors duration-500`}
+                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
                 >
                   <Bars3Icon className="w-5 h-5" />
                   List
