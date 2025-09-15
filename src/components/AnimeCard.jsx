@@ -2,13 +2,14 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import FavoriteButton from './FavoriteButton';
 
-export default function AnimeCard({ anime, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
+export default function AnimeCard({ anime, getWatchType, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
   const [hovered, setHovered] = useState(false);
 
   const handleRating = (rating) => {
     onUpdate(anime.id, { rating });
   };
 
+  const watchType = getWatchType(anime.watched);
 
   return (
     <motion.div
@@ -91,10 +92,10 @@ export default function AnimeCard({ anime, onToggleWatched, onOpenDetails, onUpd
             <button
               onClick={(e) => { e.stopPropagation(); onToggleWatched(anime.id); }}
               className={`px-3 py-1 rounded text-white text-sm transition-colors duration-500 ${
-                anime.watched ? 'bg-green-500' : 'bg-gray-500 dark:bg-gray-700'
+                watchType[1]
               }`}
             >
-              {anime.watched ? 'Watched' : 'To watch'}
+              {watchType[0]}
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(anime.id); }}

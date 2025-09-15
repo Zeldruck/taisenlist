@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import FavoriteButton from './FavoriteButton';
 
-export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
+export default function AnimeListItem({ anime, getWatchType, onToggleWatched, onOpenDetails, onUpdate, onDelete }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -16,6 +16,8 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
   };
 
   const maxTags = windowWidth < 768 ? 3 : 4;
+
+  const watchType = getWatchType(anime.watched);
 
   return (
     <motion.div
@@ -96,10 +98,10 @@ export default function AnimeListItem({ anime, onToggleWatched, onOpenDetails, o
             <button
               onClick={(e) => { e.stopPropagation(); onToggleWatched(anime.id); }}
               className={`px-3 py-1 rounded text-white text-sm transition-colors duration-500 ${
-                anime.watched ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-500 dark:bg-gray-600'
+                watchType[1]
               }`}
             >
-              {anime.watched ? 'Watched' : 'To watch'}
+              {watchType[0]}
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(anime.id); }}

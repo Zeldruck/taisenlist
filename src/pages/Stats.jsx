@@ -42,12 +42,14 @@ export default function Stats({ animes }) {
     return <div className="p-4 text-gray-500 dark:text-gray-300">No anime to generate stats.</div>;
   }
 
-  const watchedCount = filteredAnimes.filter(a => a.watched).length;
-  const unwatchedCount = filteredAnimes.filter(a => !a.watched).length;
-  const totalCount = watchedCount + unwatchedCount;
+  const watchedCount = filteredAnimes.filter(a => a.watched == 2).length;
+  const unwatchedCount = filteredAnimes.filter(a => a.watched == 0).length;
+  const inprogressCount = filteredAnimes.filter(a => a.watched == 1).length;
+  const totalCount = watchedCount + unwatchedCount + inprogressCount;
 
   const dataWatched = [
     { name: 'Watched', value: watchedCount },
+    { name: 'In progress', value: inprogressCount },
     { name: 'To watch', value: unwatchedCount }
   ];
 
@@ -109,7 +111,7 @@ export default function Stats({ animes }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {[dataWatched, dataByYear, dataByGenre, avgByGenre].map((dataBlock, idx) => {
           const isPie = idx === 0;
-          const titleMap = ['Watched vs To watch', 'Breakdown by Year', 'Breakdown by Genre', 'Average Scores by Genre'];
+          const titleMap = ['Watched vs In progress vs To watch', 'Breakdown by Year', 'Breakdown by Genre', 'Average Scores by Genre'];
           return (
             <div
               key={idx}

@@ -46,10 +46,30 @@ export default function Home() {
     localStorage.setItem('animes', JSON.stringify(updated));
   };
 
+  const watchTypes = [ 'TW', 'IP', 'W' ];
+  const watchTypeNames = [ 'To watch', 'In progress', 'Watched' ];
+
+  function getWatchType(ind) {
+
+    let n = watchTypes[ind];
+
+    switch (n) {
+      case 'W':
+        return [watchTypeNames[ind], 'bg-green-500'];
+      case 'TW':
+        return [watchTypeNames[ind], 'bg-gray-500 dark:bg-gray-700'];
+      case 'IP':
+        return [watchTypeNames[ind], 'bg-blue-500'];
+      default:
+        return ["", 'bg-gray-500 dark:bg-gray-700'];
+    }
+  }
+
   const handleToggleWatched = (id) => {
     const anime = animes.find(a => a.id === id);
     if (!anime) return;
-    handleUpdateAnime(id, { watched: !anime.watched });
+    let w = (anime.watched + 1 >= watchTypes.length) ? 0 : anime.watched + 1;
+    handleUpdateAnime(id, { watched: w });
   };
 
   const handleDeleteAnime = (id) => {
@@ -109,7 +129,7 @@ export default function Home() {
         ...(anime.genres?.map(g => g.name) || []),
         ...(anime.themes?.map(t => t.name) || [])
       ],
-      watched: false,
+      watched: 0,
       rating: 0,
       favorite: false,
     };
@@ -175,8 +195,9 @@ export default function Home() {
 
   if (filter !== 'all') {
     displayedAnimes = displayedAnimes.filter(a => {
-      if (filter === 'watched') return a.watched;
-      if (filter === 'unwatched') return !a.watched;
+      if (filter === 'watched') return a.watched == watchTypes.indexOf("W");
+      if (filter === 'inprogress') return a.watched == watchTypes.indexOf("IP");
+      if (filter === 'unwatched') return a.watched == watchTypes.indexOf("TW");
       if (filter === 'top') return a.rating >= 4;
       if (filter === 'favorites') return a.favorite;
       return true;
@@ -306,6 +327,7 @@ export default function Home() {
             >
               <option value="all">All</option>
               <option value="watched">Watched</option>
+              <option value="inprogress">In progress</option>
               <option value="unwatched">To watch</option>
               <option value="top">⭐ Top</option>
               <option value="favorites">❤️ Favorites</option>
@@ -381,6 +403,7 @@ export default function Home() {
                   {view === "grid" ? (
                     <AnimeCard
                       anime={anime}
+                      getWatchType={getWatchType}
                       onToggleWatched={isEditing ? () => {} : handleToggleWatched}
                       onOpenDetails={isEditing ? () => {} : handleOpenDetails}
                       onUpdate={handleUpdateAnime}
@@ -389,6 +412,7 @@ export default function Home() {
                   ) : (
                     <AnimeListItem
                       anime={anime}
+                      getWatchType={getWatchType}
                       onToggleWatched={isEditing ? () => {} : handleToggleWatched}
                       onOpenDetails={isEditing ? () => {} : handleOpenDetails}
                       onUpdate={handleUpdateAnime}

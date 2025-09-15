@@ -88,25 +88,27 @@ You can then deploy them on **Vercel**, **Netlify**, or any static hosting.
 
 ✅ ~~🔎 Local anime & tag search bar~~ \
 ✅ ~~📊 Basic stats~~ \
-⬜ 🔔 Notifications for airing anime \
 ✅ ~~🌙 Dark / Light mode toggle~~ \
 ✅ ~~🌙 Animated dark mode: smooth transitions across all elements~~ \
 ✅ ~~📱 Improved mobile responsive design~~ \
-⬜ ☁️ Optional cloud backup sync \
-⬜ 🎯 Personalized recommendations based on genres and ratings \
 ✅ ~~🏷️ Drag & Drop to reorder your anime list~~ \
+⬜ 🏷️ Upgraded Drag & Drop
 ✅ ~~⭐ Favorites / Starred: mark certain anime as “important”~~ \
 ⬜ 👀 Hover preview: see a short synopsis or opening when hovering an anime \
+⬜ 🎯 Multi-selection (Shift+click or checkbox) to modify multiple animes at once (e.g., mark several as favorites, watched, or delete) \
 ✅ ~~🔍 Combined filtering: e.g., “action + fantasy + not watched”~~ \
 ✅ ~~🏷️ Tag management: add/remove tags directly in the app~~ \
-⬜ 📺 Season & episode support: track progress by episode or season \
 ⬜ 🏢 Show studios or authors for additional info \
-⬜ 🌐 Share public list: generate a link for others to view your collection \
+⬜ 🏢 Distribution by studio or author if that info is added \
+⬜ 📺 Season & episode support: track progress by episode or season \
+⬜ 🔔 Notifications for airing anime \
 ⬜ 📈 Global progress: % of series completed vs in progress \
 ⬜ 🏆 Top 5 favorite genres or top-rated anime \
-⬜ 🏢 Distribution by studio or author if that info is added \
 ⬜ 🎖️ Badges / Achievements: e.g., “10 anime watched”, “First 5★ rating” \
+⬜ 🎯 Personalized recommendations based on genres and ratings \
 ⬜ 🎲 Mini quizzes or random suggestions to discover new anime \
+⬜ 🌐 Share public list: generate a link for others to view your collection \
+⬜ ☁️ Optional cloud backup sync \
 
 ---
 
