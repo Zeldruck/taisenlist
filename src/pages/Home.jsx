@@ -556,7 +556,7 @@ export default function Home() {
                 <Grid
                   columnCount={columns}
                   columnWidth={cardWidth}
-                  rowCount={rowCount + (isMobile ? 1 : 0)}
+                  rowCount={rowCount + 1}
                   rowHeight={cardHeight}
                   width={width}
                   height={height}
@@ -568,7 +568,8 @@ export default function Home() {
                     const index = rowIndex * columns + columnIndex;
                     if (index >= displayedAnimes.length) return null;
                     const anime = displayedAnimes[index];
-                    return (
+                    return anime !== undefined ?
+                    (
                       <div key={key} style={{ ...style, padding: 8 }}>
                         <SortableItem id={anime.id} isEditing={isEditing}>
                           <AnimeCard
@@ -581,12 +582,17 @@ export default function Home() {
                           />
                         </SortableItem>
                       </div>
+                    )
+                    :
+                    (
+                      <div key={key} style={{ ...style, padding: 8 }}>
+                      </div>
                     );
                   }}
                 />
               ) : (
                 <List
-                  rowCount={rowCount}
+                  rowCount={rowCount + 2}
                   rowHeight={cardHeight}
                   width={width}
                   height={height}
@@ -596,7 +602,8 @@ export default function Home() {
                   }}
                   rowRenderer={({ index, key, style }) => {
                     const anime = displayedAnimes[index];
-                    return (
+                    return anime !== undefined ?
+                    (
                       <div key={key} style={{ ...style, padding: 8 }}>
                         <SortableItem id={anime.id} isEditing={isEditing}>
                           <AnimeListItem
@@ -608,6 +615,11 @@ export default function Home() {
                             onDelete={handleDeleteAnime}
                           />
                         </SortableItem>
+                      </div>
+                    )
+                    :
+                    (
+                      <div key={key} style={{ ...style, padding: 8 }}>
                       </div>
                     );
                   }}
