@@ -245,8 +245,20 @@ export default function Home() {
   const dropdownBg = isDark ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900';
 
   return (
-    <div className={`p-4 ${baseBg} ${baseText} min-h-screen transition-colors duration-500`}>
-      <div className={`p-4 rounded shadow mb-6 relative border ${baseBorder} transition-colors duration-500`}>
+    <motion.div
+      animate={{
+        scale: isEditing ? 1.01 : 1,
+        boxShadow: isEditing
+          ? '0 0 20px rgba(34,197,94,0.6)'
+          : '0 0 10px rgba(0,0,0,0.1)',
+        transition: { duration: 0.3 }
+      }}
+      className={`p-4 ${baseBg} ${baseText} min-h-screen rounded relative transition-colors duration-500`}
+    >
+      <div
+        className={`p-4 rounded shadow mb-6 relative border transition-colors duration-500
+          ${isEditing ? 'border-4 border-green-600 bg-green-50 dark:bg-green-900' : baseBorder}`}
+      >
         <div className="flex gap-2 mb-3">
           {!isEditing && (
             <input 
@@ -319,8 +331,8 @@ export default function Home() {
           </ul>
         )}
 
-        <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch">
-          <button
+        <div className={`flex ${isEditing ? 'justify-center items-center h-24 sm:h-20' : 'flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 mt-6 items-stretch'}`}>
+          <motion.button
             onClick={() => {
               setIsEditing(!isEditing);
               if (!isEditing) {
@@ -331,10 +343,16 @@ export default function Home() {
                 localStorage.setItem('animes', JSON.stringify(animes));
               }
             }}
-            className={`px-4 py-2 rounded ${isEditing ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}
+            animate={{
+              scale: isEditing ? 1.2 : 1,
+              padding: isEditing ? '1rem 5rem' : '0.5rem 1rem'
+            }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className={`px-4 py-2 rounded flex items-center justify-center gap-2 transition-colors duration-300
+              ${isEditing ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
           >
             {isEditing ? 'Done' : 'Edit'}
-          </button>
+          </motion.button>
 
           {!isEditing && (
             <>
@@ -424,7 +442,13 @@ export default function Home() {
           <div className={view === "grid" ? "grid grid-cols-2 sm:grid-cols-3 gap-4" : "flex flex-col gap-3 w-full"}>
             {displayedAnimes.map((anime) => (
               <SortableItem key={anime.id} id={anime.id} isEditing={isEditing}>
-                <div className="draggable-item w-full" style={{ touchAction: isEditing ? "none" : "auto" }}>
+                <div
+                  className="draggable-item w-full"
+                  style={{
+                    cursor: isEditing ? "grab" : "auto",
+                    touchAction: isEditing ? "none" : "auto"
+                  }}
+                >
                   {view === "grid" ? (
                     <AnimeCard
                       anime={anime}
@@ -459,7 +483,7 @@ export default function Home() {
           onUpdate={handleUpdateAnime}
         />
       )}
-    </div>
+    </motion.div>
 
   );
 }
