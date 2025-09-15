@@ -69,20 +69,23 @@ export default function Stats({ animes }) {
   filteredAnimes.forEach(a => {
     a.tags?.forEach(tag => genreCount[tag] = (genreCount[tag] || 0) + 1);
   });
-  const dataByGenre = Object.entries(genreCount).map(([genre, value]) => ({ genre, value }));
+  const dataByGenre = Object.entries(genreCount).filter(([genre, value]) => value > 1).map(([genre, value]) => ({ genre, value }));
 
   const genreSum = {};
   const genreCountSum = {};
   filteredAnimes.forEach(a => {
+    if (!a.rating || a.rating === 0) return;
     a.tags?.forEach(tag => {
-      genreSum[tag] = (genreSum[tag] || 0) + (a.rating || 0);
+      genreSum[tag] = (genreSum[tag] || 0) + a.rating;
       genreCountSum[tag] = (genreCountSum[tag] || 0) + 1;
     });
   });
-  const avgByGenre = Object.entries(genreSum).map(([genre, sum]) => ({
-    genre,
-    average: Number((sum / genreCountSum[genre]).toFixed(1))
-  }));
+  const avgByGenre = Object.entries(genreSum)
+    .filter(([genre, sum]) => genreCountSum[genre] > 1)
+    .map(([genre, sum]) => ({
+      genre,
+      average: Number((sum / genreCountSum[genre]).toFixed(1))
+    }));
 
   return (
     <div className="p-4 transition-colors duration-500">
@@ -161,7 +164,7 @@ export default function Stats({ animes }) {
                   ) : (
                     <BarChart layout="vertical" data={avgByGenre} margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                      <XAxis type="number" stroke={textColor} />
+                      <XAxis type="number" stroke={textColor} domain={[0, 5]} />
                       <YAxis dataKey="genre" type="category" stroke={textColor} />
                       <Tooltip contentStyle={{ backgroundColor: tooltipBg, color: tooltipColor }} />
                       <Legend wrapperStyle={{ color: textColor }} />
