@@ -12,6 +12,11 @@ export default function Stats({ animes }) {
   const [minRating, setMinRating] = useState(0);
   const [isDark, setIsDark] = useState(null); 
 
+  useEffect(() => {
+    document.body.style.overflow = "auto";
+    document.documentElement.style.overflow = "auto";
+  }, []);
+
   const filteredAnimes = useMemo(() => {
     if (!animes || animes.length === 0) return [];
     return animes.filter(a =>

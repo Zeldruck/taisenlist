@@ -21,7 +21,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center gap-2 p-4 bg-gradient-to-r from-blue-400 to-blue-500 dark:from-gray-800 dark:to-gray-900 shadow-md dark:shadow-black transition-colors duration-500 overflow-x-auto">      
+    <nav className="flex items-center gap-2 sticky top-0 z-50 p-4 bg-gradient-to-r from-blue-400 to-blue-500 dark:from-gray-800 dark:to-gray-900 shadow-md dark:shadow-black transition-colors duration-500 overflow-x-auto">      
       {["/", "/stats"].map((path) => (
         <NavLink key={path} to={path}>
           {({ isActive }) => (

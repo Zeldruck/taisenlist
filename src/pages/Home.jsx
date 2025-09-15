@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from 'framer-motion';
+import { List, Grid, AutoSizer } from "react-virtualized";
 import { Squares2X2Icon, Bars3Icon, ArrowUpTrayIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, rectSortingStrategy, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers";
+
 import SortableItem from "../components/SortableItem";
-
-
 import AnimeCard from '../components/AnimeCard';
 import AnimeListItem from '../components/AnimeListItem';
 import AnimeDetailsModal from '../components/AnimeDetailsModal';
@@ -23,6 +24,7 @@ export default function Home() {
   const [sort, setSort] = useState('none');
   const [isDark, setIsDark] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const debounceRef = useRef(null);
 
   useEffect(() => {
@@ -38,6 +40,16 @@ export default function Home() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
+    };
   }, []);
 
   const handleUpdateAnime = (id, patch) => {
@@ -238,7 +250,9 @@ export default function Home() {
     });
   }
 
-
+  const CARD_WIDTH = 500;
+  const CARD_HEIGHT = 480;
+  const LIST_ITEM_HEIGHT = 215;
 
   return (
     <motion.div
@@ -354,76 +368,160 @@ export default function Home() {
             {isEditing ? 'Done' : 'Edit'}
           </motion.button>
 
+          {!isEditing && (
+            <div className="block sm:hidden mt-2">
+              <button
+                onClick={() => setShowOptions(!showOptions)}
+                className="w-full px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600 transition-colors duration-300"
+              >
+                {showOptions ? "Hide Options" : "Show Options"}
+              </button>
+            </div>
+          )}
+
 
           {!isEditing && (
-            <>
-            <input
-              value={searchLocal}
-              onChange={e => setSearchLocal(e.target.value)}
-              placeholder="🔍 Search locally or by tag name"
-              className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
-            />
+            <div className="flex-col sm:flex-row flex-wrap sm:flex-nowrap gap-2 items-stretch w-full">
+              {/* PC */}
+              <div className="hidden sm:flex gap-2 flex-wrap sm:flex-nowrap w-full">
+                <input
+                  value={searchLocal}
+                  onChange={e => setSearchLocal(e.target.value)}
+                  placeholder="🔍 Search locally or by tag name"
+                  className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                />
 
-            <select
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
-            >
-              <option value="all">All</option>
-              <option value="watched">Watched</option>
-              <option value="inprogress">In progress</option>
-              <option value="unwatched">To watch</option>
-              <option value="top">⭐ Top</option>
-              <option value="favorites">❤️ Favorites</option>
-            </select>
+                <select
+                  value={filter}
+                  onChange={e => setFilter(e.target.value)}
+                  className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                >
+                  <option value="all">All</option>
+                  <option value="watched">Watched</option>
+                  <option value="inprogress">In progress</option>
+                  <option value="unwatched">To watch</option>
+                  <option value="top">⭐ Top</option>
+                  <option value="favorites">❤️ Favorites</option>
+                </select>
 
-            <select
-              value={sort}
-              onChange={e => setSort(e.target.value)}
-              className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
-            >
-              <option value="none">-- Sorting --</option>
-              <option value="title">Title</option>
-              <option value="rating">Stars</option>
-              <option value="year">Year</option>
-            </select>
+                <select
+                  value={sort}
+                  onChange={e => setSort(e.target.value)}
+                  className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                >
+                  <option value="none">-- Sorting --</option>
+                  <option value="title">Title</option>
+                  <option value="rating">Stars</option>
+                  <option value="year">Year</option>
+                </select>
 
-              <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
-                <button
-                  onClick={() => setView('grid')}
-                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
-                >
-                  <Squares2X2Icon className="w-5 h-5" />
-                  Gallery
-                </button>
-                <button
-                  onClick={() => setView('list')}
-                  className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
-                >
-                  <Bars3Icon className="w-5 h-5" />
-                  List
-                </button>
-                <button
-                  onClick={exportJSON}
-                  className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
-                >
-                  <ArrowUpTrayIcon className="w-5 h-5" />
-                  Export
-                </button>
-                <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
-                  <ArrowDownTrayIcon className="w-5 h-5" />
-                  Import
-                  <input type="file" accept=".json" onChange={importJSON} className="hidden" />
-                </label>
+                <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
+                  <button
+                    onClick={() => setView('grid')}
+                    className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
+                  >
+                    <Squares2X2Icon className="w-5 h-5" />
+                    Gallery
+                  </button>
+                  <button
+                    onClick={() => setView('list')}
+                    className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
+                  >
+                    <Bars3Icon className="w-5 h-5" />
+                    List
+                  </button>
+                  <button
+                    onClick={exportJSON}
+                    className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
+                  >
+                    <ArrowUpTrayIcon className="w-5 h-5" />
+                    Export
+                  </button>
+                  <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
+                    <ArrowDownTrayIcon className="w-5 h-5" />
+                    Import
+                    <input type="file" accept=".json" onChange={importJSON} className="hidden" />
+                  </label>
+                </div>
               </div>
-            </>
-            )}
+
+              {/* Mobile*/}
+              {showOptions && (
+                <div className="flex flex-col gap-2 sm:hidden ">
+                  <input
+                    value={searchLocal}
+                    onChange={e => setSearchLocal(e.target.value)}
+                    placeholder="🔍 Search locally or by tag name"
+                    className={`w-full sm:flex-grow border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                  />
+
+                  <select
+                    value={filter}
+                    onChange={e => setFilter(e.target.value)}
+                    className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                  >
+                    <option value="all">All</option>
+                    <option value="watched">Watched</option>
+                    <option value="inprogress">In progress</option>
+                    <option value="unwatched">To watch</option>
+                    <option value="top">⭐ Top</option>
+                    <option value="favorites">❤️ Favorites</option>
+                  </select>
+
+                  <select
+                    value={sort}
+                    onChange={e => setSort(e.target.value)}
+                    className={`w-full sm:w-auto border p-2 sm:p-3 rounded text-sm sm:text-base bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 transition-colors duration-500`}
+                  >
+                    <option value="none">-- Sorting --</option>
+                    <option value="title">Title</option>
+                    <option value="rating">Stars</option>
+                    <option value="year">Year</option>
+                  </select>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-2 mt-2 sm:mt-0 sm:ml-auto transition-colors duration-500">
+                    <div className="flex gap-2" style={{flexGrow: 1}}>
+                      <button
+                        onClick={() => setView('grid')}
+                        className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'grid' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
+                      >
+                        <Squares2X2Icon className="w-5 h-5" />
+                        Gallery
+                      </button>
+                      <button
+                        onClick={() => setView('list')}
+                        className={`w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 ${view === 'list' ? 'bg-blue-600 text-white' : `border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100`} transition-colors duration-500`}
+                      >
+                        <Bars3Icon className="w-5 h-5" />
+                        List
+                      </button>
+                    </div>
+                    <div className="flex gap-2" style={{flexGrow: 1}}>
+                      <button
+                        onClick={exportJSON}
+                        className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-green-500 text-white transition-colors duration-500"
+                      >
+                        <ArrowUpTrayIcon className="w-5 h-5" />
+                        Export
+                      </button>
+                      <label className="w-full sm:w-auto px-4 py-2 rounded flex items-center justify-center gap-2 bg-yellow-500 text-white cursor-pointer transition-colors duration-500">
+                        <ArrowDownTrayIcon className="w-5 h-5" />
+                        Import
+                        <input type="file" accept=".json" onChange={importJSON} className="hidden" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        modifiers={[restrictToFirstScrollableAncestor]}
         onDragEnd={(event) => {
           const { active, over } = event;
           if (!over || !isEditing) return;
@@ -437,42 +535,88 @@ export default function Home() {
         }}
       >
         <SortableContext
+          className="flex-1 overflow-auto"
           items={displayedAnimes.map((a) => a.id)}
           strategy={view === "grid" ? rectSortingStrategy : verticalListSortingStrategy}
         >
-          <div className={view === "grid" ? "grid grid-cols-2 sm:grid-cols-3 gap-4" : "flex flex-col gap-3 w-full"}>
-            {displayedAnimes.map((anime) => (
-              <SortableItem key={anime.id} id={anime.id} isEditing={isEditing}>
-                <div
-                  className="draggable-item w-full"
+          <AutoSizer>
+            {({ width, height }) => {
+              const isMobile = width < 615;
+              const columns = view === "grid" ? (isMobile ? 2 : Math.floor(width / CARD_WIDTH)) : 1;
+              const cardWidth = width / columns;
+              const cardHeight = view === "grid"
+                ? (isMobile ? cardWidth * 3.5 : CARD_HEIGHT)
+                : (isMobile ? LIST_ITEM_HEIGHT * 2.2 : LIST_ITEM_HEIGHT);
+
+              const rowCount = view === "grid"
+                ? Math.ceil(displayedAnimes.length / columns)
+                : displayedAnimes.length;
+
+              return view === "grid" ? (
+                <Grid
+                  columnCount={columns}
+                  columnWidth={cardWidth}
+                  rowCount={rowCount + (isMobile ? 1 : 0)}
+                  rowHeight={cardHeight}
+                  width={width}
+                  height={height}
+                  className="scrollbar-hidden"
                   style={{
-                    cursor: isEditing ? "grab" : "auto",
                     touchAction: isEditing ? "none" : "auto"
                   }}
-                >
-                  {view === "grid" ? (
-                    <AnimeCard
-                      anime={anime}
-                      getWatchType={getWatchType}
-                      onToggleWatched={isEditing ? () => {} : handleToggleWatched}
-                      onOpenDetails={isEditing ? () => {} : handleOpenDetails}
-                      onUpdate={handleUpdateAnime}
-                      onDelete={handleDeleteAnime}
-                    />
-                  ) : (
-                    <AnimeListItem
-                      anime={anime}
-                      getWatchType={getWatchType}
-                      onToggleWatched={isEditing ? () => {} : handleToggleWatched}
-                      onOpenDetails={isEditing ? () => {} : handleOpenDetails}
-                      onUpdate={handleUpdateAnime}
-                      onDelete={handleDeleteAnime}
-                    />
-                  )}
-                </div>
-              </SortableItem>
-            ))}
-          </div>
+                  cellRenderer={({ columnIndex, rowIndex, key, style }) => {
+                    const index = rowIndex * columns + columnIndex;
+                    if (index >= displayedAnimes.length) return null;
+                    const anime = displayedAnimes[index];
+                    return (
+                      <div key={key} style={{ ...style, padding: 8 }}>
+                        <SortableItem id={anime.id} isEditing={isEditing}>
+                          <AnimeCard
+                            anime={anime}
+                            getWatchType={getWatchType}
+                            onToggleWatched={isEditing ? () => {} : handleToggleWatched}
+                            onOpenDetails={isEditing ? () => {} : handleOpenDetails}
+                            onUpdate={handleUpdateAnime}
+                            onDelete={handleDeleteAnime}
+                          />
+                        </SortableItem>
+                      </div>
+                    );
+                  }}
+                />
+              ) : (
+                <List
+                  rowCount={rowCount}
+                  rowHeight={cardHeight}
+                  width={width}
+                  height={height}
+                  className="scrollbar-hidden"
+                  style={{
+                    touchAction: isEditing ? "none" : "auto"
+                  }}
+                  rowRenderer={({ index, key, style }) => {
+                    const anime = displayedAnimes[index];
+                    return (
+                      <div key={key} style={{ ...style, padding: 8 }}>
+                        <SortableItem id={anime.id} isEditing={isEditing}>
+                          <AnimeListItem
+                            anime={anime}
+                            getWatchType={getWatchType}
+                            onToggleWatched={isEditing ? () => {} : handleToggleWatched}
+                            onOpenDetails={isEditing ? () => {} : handleOpenDetails}
+                            onUpdate={handleUpdateAnime}
+                            onDelete={handleDeleteAnime}
+                          />
+                        </SortableItem>
+                      </div>
+                    );
+                  }}
+                />
+              );
+            }}
+          </AutoSizer>
+
+
         </SortableContext>
       </DndContext>
 
