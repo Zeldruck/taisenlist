@@ -73,6 +73,27 @@ export default function Navbar() {
         </svg>
       </motion.a>
 
+      <motion.a
+        href="https://x.com/TaisenLab"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="px-2 py-1 rounded flex items-center justify-center"
+        title="View on X"
+        whileHover={{ scale: 1.2, rotate: 10 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <svg
+          className="w-5 h-5 text-white dark:text-green-400 transition-colors duration-500"
+          viewBox="0 0 1200 1227"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+        </svg>
+      </motion.a>
+
+
       <motion.button
         onClick={toggleDarkMode}
         className="ml-2 px-3 py-1 rounded text-white dark:text-green-400 transition-colors duration-500"
