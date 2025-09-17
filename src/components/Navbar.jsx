@@ -46,7 +46,7 @@ export default function Navbar() {
       <div className="flex-grow" />
 
       <motion.a
-        href="https://github.com/Zeldruck/zelanime-watch"
+        href="https://github.com/Zeldruck/taisenlist"
         target="_blank"
         rel="noopener noreferrer"
         className="px-2 py-1 rounded flex items-center justify-center"
