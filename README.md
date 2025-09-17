@@ -1,4 +1,4 @@
-# 🌸 Zelanime Watch  
+# 🌸 TaisenList  
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -15,7 +15,7 @@ Export / Import your anime list in JSON anytime.
 
 ---
 
-🌐 **Live Demo**: [zelanime-watch.vercel.app](https://zelanime-watch.vercel.app)  
+🌐 **Live Demo**: [https://taisenlist.vercel.app](https://taisenlist.vercel.app)
 *(Everything is saved locally, no account required!)*  
 
 ---
