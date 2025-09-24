@@ -114,7 +114,7 @@ export default function AnimeDetailsModal({ anime, onClose, onUpdate, onDelete }
         </div>
 
         <div className="flex items-center gap-1">
-          {[1,2,3,4,5].map(star => (
+          {[1,2,3,4,5,6,7,8,9,10].map(star => (
             <button
               key={star}
               className={`text-lg ${rating >= star ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}

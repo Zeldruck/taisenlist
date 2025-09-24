@@ -235,7 +235,7 @@ export default function Home() {
       if (filter === 'watched') return a.watched == watchTypes.indexOf("W");
       if (filter === 'inprogress') return a.watched == watchTypes.indexOf("IP");
       if (filter === 'unwatched') return a.watched == watchTypes.indexOf("TW");
-      if (filter === 'top') return a.rating >= 4;
+      if (filter === 'top') return a.rating >= 8;
       if (filter === 'favorites') return a.favorite;
       return true;
     });

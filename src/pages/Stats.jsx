@@ -164,7 +164,7 @@ export default function Stats({ animes }) {
                   ) : (
                     <BarChart layout="vertical" data={avgByGenre} margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                      <XAxis type="number" stroke={textColor} domain={[0, 5]} />
+                      <XAxis type="number" stroke={textColor} domain={[0, 10]} />
                       <YAxis dataKey="genre" type="category" stroke={textColor} />
                       <Tooltip contentStyle={{ backgroundColor: tooltipBg, color: tooltipColor }} />
                       <Legend wrapperStyle={{ color: textColor }} />

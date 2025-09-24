@@ -82,7 +82,7 @@ export default function AnimeCard({ anime, getWatchType, onToggleWatched, onOpen
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-auto gap-2">
           <div className="flex gap-1 mb-2 sm:mb-0">
-            {[1,2,3,4,5].map((star) => (
+            {[1,2,3,4,5,6,7,8,9,10].map((star) => (
               <button
                 key={star}
                 className={`text-lg transition-colors duration-500 ${
